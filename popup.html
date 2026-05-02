@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SafeNET</title>
+
+<style>
+body{
+width:340px;
+margin:0;
+padding:0;
+background:#0b0c10;
+color:#c5c6c7;
+font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+min-height:430px;
+overflow-x:hidden;
+}
+
+.extension-container{
+border:1px solid #1f2833;
+}
+
+.window-header{
+background:#1f2833;
+padding:10px 12px;
+display:flex;
+align-items:center;
+border-bottom:2px solid #45a29e;
+}
+
+.tools{
+display:flex;
+gap:6px;
+}
+
+.box{
+width:12px;
+height:12px;
+border-radius:50%;
+display:block;
+}
+
+.red{background:#ff605c;}
+.yellow{background:#ffbd44;}
+.green{background:#00ca4e;}
+
+.header-title{
+margin:auto;
+padding-right:42px;
+font-family:Courier New,monospace;
+font-size:.85rem;
+color:#45a29e;
+}
+
+.tab-bar{
+display:flex;
+gap:8px;
+padding:12px 20px 0 20px;
+}
+
+.tab-btn{
+flex:1;
+padding:10px;
+background:#1f2833;
+border:1px solid #45a29e;
+color:#66fcf1;
+border-radius:8px;
+cursor:pointer;
+font-size:12px;
+font-weight:bold;
+}
+
+.tab-btn.active{
+background:#132028;
+box-shadow:0 0 14px rgba(102,252,241,.45);
+}
+
+.content{
+padding:20px;
+}
+
+.tab-content{
+display:none;
+}
+
+.tab-content.active-tab{
+display:block;
+}
+
+.brand h1{
+margin:0;
+font-size:1.8rem;
+color:white;
+letter-spacing:2px;
+}
+
+.subtitle{
+margin:4px 0 24px 0;
+font-size:.85rem;
+color:#45a29e;
+text-transform:uppercase;
+}
+
+.data-grid{
+display:flex;
+flex-direction:column;
+gap:16px;
+margin-bottom:24px;
+}
+
+.data-row{
+display:flex;
+gap:12px;
+}
+
+.data-item{
+flex:1;
+background:rgba(31,40,51,.4);
+padding:12px;
+border-radius:6px;
+border:1px solid rgba(69,162,158,.2);
+}
+
+.labels{
+display:block;
+font-size:.75rem;
+color:#8f9ba8;
+margin-bottom:6px;
+text-transform:uppercase;
+}
+
+.data-value{
+margin:0;
+font-family:Courier New,monospace;
+font-size:.95rem;
+color:white;
+word-break:break-word;
+}
+
+#trustScore{
+font-size:1.4rem;
+color:#66fcf1;
+font-weight:bold;
+}
+
+.scan-button{
+width:100%;
+padding:15px;
+background:#1f2833;
+border:2px solid #45a29e;
+border-radius:8px;
+color:#66fcf1;
+font-weight:bold;
+cursor:pointer;
+position: relative;
+z-index: 20;
+}
+
+.gauge-wrap{
+display:flex;
+justify-content:center;
+margin:8px 0 22px;
+}
+
+.gauge-shell{
+position:relative;
+width:190px;
+height:110px;
+}
+
+.gauge-arc {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 190px;
+  height: 95px;
+  border-top-left-radius: 190px;
+  border-top-right-radius: 190px;
+  
+  /* Centers the sweep at the needle's pivot point and starts it at 9 o'clock */
+  background: conic-gradient(
+    from 270deg at 50% 100%,
+    #ff3b30 0deg,
+    #ffbd44 70deg,
+    #00ff99 160deg,
+    #00ff99 180deg
+  );
+  
+  /* Creates the hollow ring effect (cuts out the center) */
+  -webkit-mask: radial-gradient(circle at 50% 100%, transparent 65px, black 66px);
+  mask: radial-gradient(circle at 50% 100%, transparent 65px, black 66px);
+  
+  filter: drop-shadow(0 0 12px rgba(102,252,241,.35));
+}
+.needle{
+position:absolute;
+bottom:0;
+left:50%;
+width:6px;
+height:88px;
+border-radius:8px;
+background:linear-gradient(to top,#ffffff,#66fcf1);
+transform-origin:bottom center;
+transform:translateX(-50%) rotate(-90deg);
+transition:transform 0.9s cubic-bezier(.22,1,.36,1);
+box-shadow:0 0 18px rgba(255,255,255,.7);
+}
+
+.hub{
+position:absolute;
+bottom:-2px;
+left:50%;
+transform:translateX(-50%);
+width:22px;
+height:22px;
+border-radius:50%;
+background:#fff;
+box-shadow:0 0 18px rgba(255,255,255,.8);
+animation:hubPulse 1.8s infinite;
+}
+
+.score-readout{
+position:absolute;
+bottom:28px;
+left:50%;
+transform:translateX(-50%);
+font-size:24px;
+font-weight:700;
+font-family:Courier New,monospace;
+color:#fff;
+text-shadow:0 0 10px rgba(102,252,241,.6);
+}
+
+@keyframes hubPulse{
+0%{transform:translateX(-50%) scale(1);}
+50%{transform:translateX(-50%) scale(1.12);}
+100%{transform:translateX(-50%) scale(1);}
+}
+
+.gauge-shell,
+.gauge-arc,
+.needle,
+.hub,
+.score-readout{
+pointer-events:none;
+}
+
+.scan-button:active{
+transform:scale(.97);
+}
+
+.tab-btn{
+transition:.25s;
+}
+
+.tab-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 0 18px rgba(102,252,241,.45);
+}
+
+.data-item{
+backdrop-filter:blur(6px);
+}
+
+.brand h1{
+text-shadow:0 0 14px rgba(102,252,241,.45);
+} 
+
+body{
+transition:background .45s ease;
+}
+
+body.safe-mode{
+background:#08140f;
+}
+
+body.warn-mode{
+background:#181408;
+}
+
+body.danger-mode{
+background:#1a0808;
+}
+
+.extension-container{
+transition:box-shadow .45s ease;
+}
+
+.scan-button:hover{
+transform:translateY(-2px);
+box-shadow:0 0 20px rgba(102,252,241,.45);
+}
+
+.scan-button:disabled{
+opacity:.7;
+cursor:not-allowed;
+}
+</style>
+</head>
+
+<body>
+
+<div class="extension-container">
+
+<div class="window-header">
+<div class="tools">
+<span class="box red"></span>
+<span class="box yellow"></span>
+<span class="box green"></span>
+</div>
+<span class="header-title">SafeNET Console</span>
+</div>
+
+<div class="tab-bar">
+<button class="tab-btn active" data-tab="scannerTab">Scanner</button>
+<button class="tab-btn" data-tab="historyTab">History</button>
+<button class="tab-btn" data-tab="aboutTab">About</button>
+</div>
+
+<div class="content">
+
+<!-- Scanner -->
+<div id="scannerTab" class="tab-content active-tab">
+
+<div class="brand">
+<h1>SafeNET</h1>
+<p class="subtitle">Real-time Browser Protection</p>
+</div>
+
+<div class="gauge-wrap">
+  <div class="gauge-shell">
+    <div class="gauge-arc"></div>
+    <div class="needle" id="needle"></div>
+    <div class="hub"></div>
+    <div class="score-readout" id="meterScore">--</div>
+  </div>
+</div>
+<div class="data-grid">
+
+<div class="data-item">
+<label class="labels">Current Site</label>
+<p class="data-value" id="siteUrl">Scanning...</p>
+</div>
+
+<div class="data-row">
+<div class="data-item">
+<label class="labels">Trust Score</label>
+<p class="data-value" id="trustScore">--/100</p>
+</div>
+
+<div class="data-item">
+<label class="labels">Status</label>
+<p class="data-value" id="statusText">Checking...</p>
+</div>
+</div>
+
+<div class="data-item">
+<label class="labels">Risk Factors</label>
+<p class="data-value" id="riskReasons">Awaiting diagnostics...</p>
+</div>
+
+</div>
+
+<button class="scan-button" id="scanBtn">Scan Again</button>
+
+</div>
+
+<!-- History -->
+<div id="historyTab" class="tab-content">
+<div class="data-row" style="margin-bottom:14px;">
+  <div class="data-item">
+    <label class="labels">Sites Scanned</label>
+    <p class="data-value" id="sitesScanned">0</p>
+  </div>
+
+  <div class="data-item">
+    <label class="labels">Threats Found</label>
+    <p class="data-value" id="threatsFound">0</p>
+  </div>
+</div>
+<div class="data-item">
+<label class="labels">Recent Threat History</label>
+<div id="historyList" class="data-value">
+No scans yet.
+</div>
+</div>
+
+</div>
+
+<!-- About -->
+<div id="aboutTab" class="tab-content">
+
+<div class="data-item">
+<label class="labels">About SafeNET</label>
+<p class="data-value">
+SafeNET detects suspicious websites,
+scores link trust levels,
+and warns users against phishing attacks.
+</p>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
